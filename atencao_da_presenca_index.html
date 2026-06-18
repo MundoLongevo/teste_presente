@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Atenção da Presença</title>
+  <style>
+    :root{
+      --bg:#fff7ed;
+      --paper:#ffffff;
+      --ink:#2c211b;
+      --muted:#6f6258;
+      --primary:#6d28d9;
+      --primary2:#8b5cf6;
+      --violet:#3b0764;
+      --accent:#f59e0b;
+      --green:#059669;
+      --blue:#2563eb;
+      --rose:#e11d48;
+      --line:#eadfce;
+      --soft:#f6edff;
+      --shadow:0 14px 38px rgba(48,25,9,.13);
+      --radius:22px;
+    }
+
+    *{box-sizing:border-box}
+
+    html{scroll-behavior:smooth}
+
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 10% -10%, rgba(245,158,11,.27), transparent 28%),
+        radial-gradient(circle at 100% 5%, rgba(139,92,246,.20), transparent 28%),
+        linear-gradient(180deg,#fff7ed 0%, #fffaf4 50%, #f8f1ff 100%);
+      line-height:1.48;
+      padding-bottom:104px;
+    }
+
+    .wrap{
+      width:min(980px,100%);
+      margin:0 auto;
+      padding:14px;
+    }
+
+    header{
+      padding:18px 0 8px;
+    }
+
+    .hero{
+      background:rgba(255,255,255,.82);
+      border:1px solid rgba(234,223,206,.9);
+      border-radius:28px;
+      padding:24px 18px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      background:rgba(245,158,11,.20);
+      right:-70px;
+      top:-70px;
+    }
+
+    .hero > *{position:relative; z-index:1}
+
+    .kicker{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      background:#fff4d7;
+      color:#724c00;
+      border:1px solid #f3d184;
+      border-radius:999px;
+      padding:7px 11px;
+      font-size:.85rem;
+      font-weight:800;
+      margin-bottom:12px;
+    }
+
+    h1{
+      margin:0;
+      color:var(--violet);
+      font-size:clamp(2.05rem, 12vw, 4.2rem);
+      line-height:.98;
+      letter-spacing:-.055em;
+    }
+
+    .subtitle{
+      margin:14px 0 0;
+      color:var(--muted);
+      font-size:1.05rem;
+      max-width:760px;
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:16px;
+    }
+
+    .chip{
+      background:#f4edff;
+      color:var(--violet);
+      border:1px solid #e0d0ff;
+      border-radius:999px;
+      padding:8px 10px;
+      font-weight:800;
+      font-size:.87rem;
+    }
+
+    .card{
+      background:var(--paper);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+      margin:14px 0;
+    }
+
+    .intro h2, .result h2{
+      margin:0 0 10px;
+      color:var(--violet);
+    }
+
+    .intro p{margin:.7rem 0}
+
+    .game-note{
+      display:flex;
+      gap:12px;
+      padding:13px;
+      border-radius:18px;
+      background:#f0fdf4;
+      border:1px solid #bbf7d0;
+      color:#14532d;
+      margin-top:14px;
+    }
+
+    .game-note .icon{
+      min-width:42px;
+      height:42px;
+      border-radius:15px;
+      display:grid;
+      place-items:center;
+      background:#dcfce7;
+      font-size:1.5rem;
+    }
+
+    .legend-toggle{
+      display:none;
+      width:100%;
+      margin:12px 0 0;
+      background:#efe6ff;
+      color:var(--violet);
+      border:1px solid #d9c6ff;
+      border-radius:16px;
+      padding:12px;
+      font-weight:900;
+      font-size:1rem;
+    }
+
+    .legend-panel{
+      position:sticky;
+      top:0;
+      z-index:30;
+      background:rgba(255,247,237,.92);
+      backdrop-filter:blur(10px);
+      padding:8px 0;
+      border-bottom:1px solid rgba(234,223,206,.8);
+    }
+
+    .legend-inner{
+      width:min(980px,100%);
+      margin:0 auto;
+      padding:0 14px;
+    }
+
+    .legend-line{
+      display:grid;
+      grid-template-columns: repeat(5, minmax(0,1fr));
+      gap:7px;
+    }
+
+    .legend-item{
+      background:#fff;
+      border:1px solid #eadfce;
+      border-radius:14px;
+      padding:8px 6px;
+      text-align:center;
+      box-shadow:0 6px 14px rgba(48,25,9,.06);
+      font-size:.77rem;
+      color:#594c43;
+    }
+
+    .legend-item b{
+      display:block;
+      color:var(--primary);
+      font-size:1.03rem;
+      margin-bottom:1px;
+    }
+
+    .scorebar{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:60;
+      background:rgba(255,255,255,.94);
+      backdrop-filter:blur(12px);
+      border-top:1px solid rgba(234,223,206,.9);
+      padding:10px 12px max(10px, env(safe-area-inset-bottom));
+      box-shadow:0 -12px 34px rgba(48,25,9,.12);
+    }
+
+    .scorebar-inner{
+      width:min(980px,100%);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap:10px;
+      align-items:center;
+    }
+
+    .score-meta{
+      min-width:0;
+    }
+
+    .score-top{
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      align-items:center;
+      margin-bottom:6px;
+      font-weight:900;
+      color:var(--violet);
+      font-size:.95rem;
+    }
+
+    .progress-wrap{
+      width:100%;
+      height:13px;
+      border-radius:999px;
+      background:#efe4d6;
+      overflow:hidden;
+      border:1px solid #dfd0bd;
+    }
+
+    .progress{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background:linear-gradient(90deg,#e11d48,#f59e0b,#10b981,#2563eb,#7c3aed);
+      transition:width .25s ease;
+    }
+
+    .score-actions{
+      display:flex;
+      gap:7px;
+    }
+
+    button{
+      border:0;
+      border-radius:999px;
+      font-weight:900;
+      cursor:pointer;
+      font-size:.96rem;
+      transition:.18s ease;
+      font-family:inherit;
+    }
+
+    .primary{
+      color:#fff;
+      background:var(--primary);
+      padding:12px 14px;
+    }
+
+    .primary:hover{background:#581c87}
+
+    .secondary{
+      color:var(--violet);
+      background:#efe6ff;
+      padding:12px 13px;
+    }
+
+    .section-title{
+      margin:20px 0 10px;
+      padding:13px 15px;
+      border-radius:18px;
+      border:1px solid #e0d0ff;
+      background:linear-gradient(90deg,rgba(139,92,246,.16),rgba(245,158,11,.15));
+      color:var(--violet);
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .section-title .emoji{font-size:1.55rem}
+
+    .section-title h2{
+      font-size:1.08rem;
+      margin:0;
+      line-height:1.18;
+    }
+
+    .question{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:15px;
+      margin:11px 0;
+      transition:.18s ease;
+      scroll-margin-top:110px;
+    }
+
+    .question.answered{
+      border-color:rgba(5,150,105,.45);
+      background:#fcfffd;
+    }
+
+    .q-head{
+      display:flex;
+      gap:11px;
+      align-items:flex-start;
+      margin-bottom:12px;
+    }
+
+    .q-number{
+      min-width:36px;
+      height:36px;
+      border-radius:13px;
+      background:#f0e7ff;
+      color:#5b21b6;
+      display:grid;
+      place-items:center;
+      font-weight:950;
+    }
+
+    .q-text{
+      font-size:1.02rem;
+      font-weight:800;
+      padding-top:2px;
+    }
+
+    .options{
+      display:grid;
+      grid-template-columns: repeat(5, minmax(0,1fr));
+      gap:7px;
+    }
+
+    .option{position:relative}
+    .option input{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+
+    .option label{
+      display:grid;
+      place-items:center;
+      gap:1px;
+      min-height:64px;
+      border-radius:16px;
+      border:1px solid #e9dccb;
+      background:#fffaf3;
+      color:#5b5047;
+      text-align:center;
+      cursor:pointer;
+      padding:8px 4px;
+      font-size:.74rem;
+      font-weight:750;
+      line-height:1.12;
+      user-select:none;
+    }
+
+    .option label b{
+      display:block;
+      width:29px;
+      height:29px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:#f4eadc;
+      color:var(--violet);
+      font-size:1rem;
+      margin-bottom:2px;
+    }
+
+    .option input:checked + label{
+      background:#efe6ff;
+      border-color:var(--primary);
+      color:var(--violet);
+      box-shadow:0 8px 20px rgba(109,40,217,.15);
+      transform:translateY(-1px);
+    }
+
+    .option input:checked + label b{
+      background:var(--primary);
+      color:#fff;
+    }
+
+    .result{
+      display:none;
+      background:linear-gradient(180deg,#ffffff,#fff7e7);
+      border:2px solid rgba(109,40,217,.17);
+      border-radius:28px;
+      padding:22px 18px;
+      margin:22px 0 28px;
+      box-shadow:var(--shadow);
+      scroll-margin-top:110px;
+    }
+
+    .result.show{display:block}
+
+    .level-tag{
+      display:inline-flex;
+      background:#efe6ff;
+      color:var(--violet);
+      border:1px solid #d9c6ff;
+      border-radius:999px;
+      padding:8px 12px;
+      font-weight:950;
+      margin:6px 0 12px;
+    }
+
+    .consultoria{
+      margin-top:14px;
+      padding:15px;
+      border-radius:18px;
+      background:#f0fdf4;
+      border:1px solid #bbf7d0;
+      color:#164e31;
+    }
+
+    .consultoria h3{
+      margin:0 0 8px;
+      color:#065f46;
+    }
+
+    .medals{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:9px;
+      margin-top:12px;
+    }
+
+    .medal{
+      background:#fff8e8;
+      border:1px solid #f1d08a;
+      border-radius:16px;
+      padding:11px;
+      font-weight:800;
+      font-size:.92rem;
+    }
+
+    .missions{
+      display:grid;
+      gap:9px;
+      margin-top:12px;
+    }
+
+    .mission{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      background:#fff;
+      border:1px solid #eadfce;
+      border-radius:16px;
+      padding:12px;
+      font-weight:700;
+    }
+
+    .mission input{
+      margin-top:4px;
+      transform:scale(1.25);
+    }
+
+    footer{
+      padding:26px 16px 130px;
+      text-align:center;
+      color:var(--muted);
+      font-size:.92rem;
+    }
+
+    @media(max-width:680px){
+      body{padding-bottom:118px}
+
+      .wrap{padding:10px}
+
+      header{padding-top:10px}
+
+      .hero{
+        border-radius:24px;
+        padding:22px 16px;
+      }
+
+      .subtitle{
+        font-size:1rem;
+      }
+
+      .legend-panel{
+        position:sticky;
+        top:0;
+        padding:7px 0;
+      }
+
+      .legend-line{
+        grid-template-columns:repeat(5, 1fr);
+        gap:4px;
+      }
+
+      .legend-item{
+        padding:6px 2px;
+        border-radius:11px;
+        font-size:.60rem;
+        min-height:48px;
+      }
+
+      .legend-item b{
+        font-size:.9rem;
+      }
+
+      .card{
+        padding:15px;
+        border-radius:20px;
+      }
+
+      .question{
+        padding:14px;
+        border-radius:20px;
+      }
+
+      .q-text{
+        font-size:1rem;
+      }
+
+      .options{
+        grid-template-columns: repeat(5, 1fr);
+        gap:5px;
+      }
+
+      .option label{
+        min-height:58px;
+        border-radius:13px;
+        padding:6px 2px;
+        font-size:.60rem;
+        word-break:normal;
+      }
+
+      .option label b{
+        width:27px;
+        height:27px;
+        font-size:.92rem;
+      }
+
+      .scorebar-inner{
+        grid-template-columns:1fr;
+      }
+
+      .score-actions{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+      }
+
+      .primary,.secondary{
+        width:100%;
+        padding:12px 10px;
+      }
+
+      .medals{grid-template-columns:1fr}
+
+      .section-title{
+        padding:12px;
+      }
+
+      .section-title h2{
+        font-size:1rem;
+      }
+    }
+
+    @media(max-width:390px){
+      .legend-item{
+        font-size:.55rem;
+      }
+      .option label{
+        font-size:.55rem;
+      }
+      .q-number{
+        min-width:34px;
+        height:34px;
+      }
+    }
+
+    @media print{
+      body{background:#fff; padding-bottom:0}
+      .legend-panel,.scorebar{position:static}
+      .card,.question,.result{box-shadow:none}
+      .primary,.secondary{display:none}
+      footer{padding-bottom:20px}
+    }
+  </style>
+</head>
+<body>
+  <div class="legend-panel" aria-label="Legenda de pontuação">
+    <div class="legend-inner">
+      <div class="legend-line">
+        <div class="legend-item"><b>0</b>Quase nunca</div>
+        <div class="legend-item"><b>1</b>Poucas vezes</div>
+        <div class="legend-item"><b>2</b>Às vezes</div>
+        <div class="legend-item"><b>3</b>Muitas vezes</div>
+        <div class="legend-item"><b>4</b>Quase sempre</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <header>
+      <section class="hero">
+        <div class="kicker">🌿 Teste FQ24 • Mentoria 70+</div>
+        <h1>Atenção da Presença</h1>
+        <p class="subtitle">Uma autoavaliação leve, lúdica e honesta para perceber se você está vivendo a vida por inteiro — ou apenas passando por ela no automático.</p>
+        <div class="chips">
+          <span class="chip">🎯 24 itens</span>
+          <span class="chip">🧭 5 níveis</span>
+          <span class="chip">📱 Feito para celular</span>
+          <span class="chip">✨ Resultado automático</span>
+        </div>
+      </section>
+    </header>
+
+    <section class="card intro">
+      <h2>Antes de começar</h2>
+      <p>Este teste não é prova, diagnóstico ou julgamento. É um espelho gentil. Ele ajuda você a perceber como anda sua capacidade de estar presente: consigo mesmo, com os outros, com o corpo, com o tempo, com a vida e com a tecnologia.</p>
+      <p>Leia cada frase e marque a opção que mais combina com você <strong>nos últimos 15 dias</strong>.</p>
+      <div class="game-note">
+        <div class="icon">🎲</div>
+        <div><strong>Missão do jogo:</strong><br>Sua missão não é vencer os outros. É se reencontrar. Cada resposta é uma pista. Cada ponto é um sinal. Cada percepção é um passo.</div>
+      </div>
+    </section>
+
+    <form id="quiz"></form>
+
+    <section id="result" class="result" aria-live="polite">
+      <h2 id="resultTitle"></h2>
+      <div id="resultTag" class="level-tag"></div>
+      <p id="resultText"></p>
+
+      <div class="consultoria">
+        <h3>Consultoria de presença</h3>
+        <div id="consulting"></div>
+      </div>
+
+      <h3>🎖️ Medalhas simbólicas da presença</h3>
+      <div class="medals">
+        <div class="medal">☕ Café com Alma</div>
+        <div class="medal">👀 Olhar de Volta</div>
+        <div class="medal">📵 Rede Desligada, Vida Ligada</div>
+        <div class="medal">🌙 Silêncio Amigo</div>
+        <div class="medal">💬 Comunicativa</div>
+        <div class="medal">🚶 Caminho Aberto</div>
+      </div>
+
+      <h3>🚀 Desafio de 7 dias</h3>
+      <p>Escolha uma missão simples para praticar durante uma semana:</p>
+      <div class="missions">
+        <label class="mission"><input type="checkbox"> Tomar café da manhã sem celular.</label>
+        <label class="mission"><input type="checkbox"> Fazer uma caminhada perceptiva de 10 minutos.</label>
+        <label class="mission"><input type="checkbox"> Ligar para uma pessoa querida.</label>
+        <label class="mission"><input type="checkbox"> Fazer 5 minutos de silêncio por dia.</label>
+        <label class="mission"><input type="checkbox"> Usar o celular com pergunta de entrada: “para que estou entrando aqui?”</label>
+        <label class="mission"><input type="checkbox"> Desativar notificações não essenciais.</label>
+        <label class="mission"><input type="checkbox"> Retomar um hobby fora da tela.</label>
+        <label class="mission"><input type="checkbox"> Fazer uma refeição olhando para as pessoas, não para o aparelho.</label>
+        <label class="mission"><input type="checkbox"> Escrever no diário de presença.</label>
+        <label class="mission"><input type="checkbox"> Dizer “não” a uma demanda que me afasta de mim.</label>
+      </div>
+    </section>
+  </div>
+
+  <div class="scorebar">
+    <div class="scorebar-inner">
+      <div class="score-meta">
+        <div class="score-top">
+          <span><span id="answered">0</span>/24 respondidos</span>
+          <span><span id="score">0</span>/96 pontos</span>
+        </div>
+        <div class="progress-wrap"><div class="progress" id="progress"></div></div>
+      </div>
+      <div class="score-actions">
+        <button type="button" class="primary" onclick="showResult()">Resultado</button>
+        <button type="button" class="secondary" onclick="resetQuiz()">Recomeçar</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <strong>Atenção da Presença</strong><br>
+    Teste FQ24 • Desenvolvido para a Mentoria ANABB 70+<br>
+    Ricardo de Faria Barros, psicólogo
+  </footer>
+
+  <script>
+    const sections = [
+      {icon:"🫶", title:"Parte 1 — Presença comigo mesmo", questions:[
+        "Eu consigo perceber como meu corpo está se sentindo ao longo do dia.",
+        "Eu consigo parar por alguns minutos sem sentir que preciso logo fazer alguma coisa.",
+        "Eu reconheço minhas emoções sem precisar fugir imediatamente delas.",
+        "Eu consigo ficar comigo mesmo em silêncio, sem transformar todo vazio em problema."
+      ]},
+      {icon:"🌿", title:"Parte 2 — Presença no agora", questions:[
+        "Eu consigo saborear pequenas coisas do dia, como um café, uma música, uma conversa ou uma paisagem.",
+        "Eu percebo detalhes ao meu redor que poderiam passar despercebidos.",
+        "Eu consigo viver uma atividade sem ficar pensando imediatamente na próxima.",
+        "Eu sinto que tenho momentos reais de calma durante o dia."
+      ]},
+      {icon:"💬", title:"Parte 3 — Presença nas relações", questions:[
+        "Quando alguém fala comigo, eu consigo escutar sem interromper ou me distrair facilmente.",
+        "Eu olho nos olhos das pessoas quando estou conversando com elas.",
+        "Eu procuro transformar curtidas, emojis ou mensagens rápidas em conversas mais verdadeiras quando sinto vontade de me aproximar de alguém.",
+        "Eu sinto que minhas relações têm momentos de presença real, e não apenas contatos rápidos."
+      ]},
+      {icon:"📱", title:"Parte 4 — Presença e tecnologia", questions:[
+        "Antes de pegar o celular, eu costumo saber o que vou fazer nele.",
+        "Eu consigo usar o celular com propósito, sem me perder em rolagens sem destino.",
+        "Ao final do dia, sinto que meu uso do celular agregou algo: aprendizado, vínculo, organização, alegria ou cuidado.",
+        "Eu consigo ficar períodos sem checar notificações sem sentir muita ansiedade."
+      ]},
+      {icon:"🧭", title:"Parte 5 — Presença e autonomia", questions:[
+        "Eu consigo dizer “não” a compromissos, convites ou demandas que me afastam de mim mesmo.",
+        "Minha agenda tem espaço para descanso, prazer, silêncio e escolhas minhas.",
+        "Eu sinto que minha vida não está apenas respondendo às expectativas dos outros.",
+        "Eu consigo perceber quando estou vivendo em alta rotação e preciso desacelerar."
+      ]},
+      {icon:"✨", title:"Parte 6 — Presença e sentido", questions:[
+        "Eu tenho atividades fora da tela que me dão prazer, interesse ou sentido.",
+        "Eu consigo lembrar do passado sem morar nele.",
+        "Eu começo e concluo algumas atividades importantes, sem abrir mil frentes ao mesmo tempo.",
+        "Eu sinto que, nos últimos dias, estive mais vivo por dentro do que apenas ocupado por fora."
+      ]}
+    ];
+
+    const options = [
+      {value:0, label:"Quase nunca"},
+      {value:1, label:"Poucas vezes"},
+      {value:2, label:"Às vezes"},
+      {value:3, label:"Muitas vezes"},
+      {value:4, label:"Quase sempre"}
+    ];
+
+    const levels = [
+      {
+        min:0, max:19,
+        title:"Nível 1 — Presença em Semente",
+        tag:"0% a 20% do caminho",
+        text:"Sua presença talvez ainda esteja germinando. Isso não é fracasso: é convite. Pode ser que telas, ansiedade, passado, excesso de tarefas, agendas alheias ou medo do silêncio estejam ocupando espaço demais.",
+        consulting:"<p><strong>Comece pequeno.</strong> Escolha apenas uma prática por dia: tomar café sem celular, caminhar 10 minutos percebendo o corpo, deixar o aparelho longe por 20 minutos ou sentar em silêncio por 3 minutos.</p><p><strong>Lema:</strong> “Não preciso recuperar a vida inteira hoje. Basta recuperar este instante.”</p>"
+      },
+      {
+        min:20, max:38,
+        title:"Nível 2 — Presença Despertando",
+        tag:"21% a 40% do caminho",
+        text:"Sua presença já dá sinais de vida, mas ainda precisa de cuidado. Há lampejos de atenção, vínculos e calma, mas talvez você ainda se perca em rolagens, preocupações ou alta rotação.",
+        consulting:"<p>Crie <strong>três ilhas de presença</strong> no dia: uma refeição sem tela, uma conversa com escuta real e alguns minutos de silêncio amigo.</p><p><strong>Lema:</strong> “Minha presença já existe. Agora vou ajudá-la a acordar.”</p>"
+      },
+      {
+        min:39, max:57,
+        title:"Nível 3 — Presença em Construção",
+        tag:"41% a 60% do caminho",
+        text:"Você está no meio da travessia. Já percebe alguns sequestradores da atenção e provavelmente consegue voltar ao agora em vários momentos, mas ainda há instabilidade.",
+        consulting:"<p>Escolha seu ponto mais baixo: tecnologia, ansiedade, relações, autonomia, silêncio ou sentido. Transforme esse ponto em um <strong>desafio de 7 dias</strong>.</p><p><strong>Lema:</strong> “Eu já voltei algumas vezes. Agora quero voltar com mais consciência.”</p>"
+      },
+      {
+        min:58, max:76,
+        title:"Nível 4 — Presença em Movimento",
+        tag:"61% a 80% do caminho",
+        text:"Sua presença está viva e caminhando bem. Você já tem recursos para perceber o corpo, cuidar dos vínculos, usar melhor a tecnologia e reconhecer quando a vida acelera demais.",
+        consulting:"<p>Agora é hora de refinar. Pratique uma melhora pequena: mais silêncio, menos notificação, uma conversa mais inteira, uma caminhada perceptiva ou um “não” libertador.</p><p><strong>Lema:</strong> “Eu já caminho na presença. Agora quero caminhar com mais inteireza.”</p>"
+      },
+      {
+        min:77, max:96,
+        title:"Nível 5 — Presença Inteira",
+        tag:"81% a 100% do caminho",
+        text:"Você demonstra uma relação madura com o tempo, a tecnologia, os vínculos e consigo mesmo. Isso não significa que nunca se distraia, mas que já sabe voltar.",
+        consulting:"<p>Sua missão agora é <strong>compartilhar presença</strong>: convidar alguém para caminhar, promover uma refeição sem telas, ensinar uma prática de respiração ou transformar interação digital em conversa verdadeira.</p><p><strong>Lema:</strong> “Minha presença é um presente para mim e para quem convive comigo.”</p>"
+      }
+    ];
+
+    const quiz = document.getElementById("quiz");
+
+    function renderQuiz(){
+      let qIndex = 0;
+      sections.forEach((section) => {
+        const title = document.createElement("div");
+        title.className = "section-title";
+        title.innerHTML = `<div class="emoji">${section.icon}</div><h2>${section.title}</h2>`;
+        quiz.appendChild(title);
+
+        section.questions.forEach((question) => {
+          qIndex++;
+          const q = document.createElement("div");
+          q.className = "question";
+          q.id = `q-card-${qIndex}`;
+          q.innerHTML = `
+            <div class="q-head">
+              <div class="q-number">${qIndex}</div>
+              <div class="q-text">${question}</div>
+            </div>
+            <div class="options">
+              ${options.map(opt => `
+                <div class="option">
+                  <input type="radio" id="q${qIndex}-${opt.value}" name="q${qIndex}" value="${opt.value}">
+                  <label for="q${qIndex}-${opt.value}"><b>${opt.value}</b>${opt.label}</label>
+                </div>
+              `).join("")}
+            </div>
+          `;
+          quiz.appendChild(q);
+        });
+      });
+      quiz.addEventListener("change", updateScore);
+    }
+
+    function getScoreData(){
+      let total = 0;
+      let answered = 0;
+      for(let i=1; i<=24; i++){
+        const checked = document.querySelector(`input[name="q${i}"]:checked`);
+        const card = document.getElementById(`q-card-${i}`);
+        if(checked){
+          total += Number(checked.value);
+          answered++;
+          card.classList.add("answered");
+        } else {
+          card.classList.remove("answered");
+        }
+      }
+      return {total, answered};
+    }
+
+    function findLevel(score){
+      return levels.find(level => score >= level.min && score <= level.max) || levels[0];
+    }
+
+    function updateScore(){
+      const {total, answered} = getScoreData();
+      document.getElementById("score").textContent = total;
+      document.getElementById("answered").textContent = answered;
+      document.getElementById("progress").style.width = `${Math.round((total/96)*100)}%`;
+    }
+
+    function showResult(){
+      const {total, answered} = getScoreData();
+
+      if(answered < 24){
+        alert(`Você respondeu ${answered} de 24 itens. Para um resultado mais justo, responda todos os itens.`);
+        return;
+      }
+
+      const level = findLevel(total);
+      const result = document.getElementById("result");
+      document.getElementById("resultTitle").textContent = level.title;
+      document.getElementById("resultTag").textContent = `${level.tag} • ${total} de 96 pontos`;
+      document.getElementById("resultText").textContent = level.text;
+      document.getElementById("consulting").innerHTML = level.consulting;
+      result.classList.add("show");
+      result.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+
+    function resetQuiz(){
+      document.querySelectorAll('input[type="radio"]').forEach(input => input.checked = false);
+      document.querySelectorAll('input[type="checkbox"]').forEach(input => input.checked = false);
+      document.querySelectorAll(".question").forEach(card => card.classList.remove("answered"));
+      document.getElementById("result").classList.remove("show");
+      updateScore();
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+
+    renderQuiz();
+    updateScore();
+  </script>
+</body>
+</html>
