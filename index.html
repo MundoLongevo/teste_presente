@@ -32,8 +32,8 @@
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color:var(--ink);
       background:
-        radial-gradient(circle at 10% -10%, rgba(245,158,11,.27), transparent 28%),
-        radial-gradient(circle at 100% 5%, rgba(139,92,246,.20), transparent 28%),
+        radial-gradient(circle at 10% -10%, rgba(305,158,11,.27), transparent 28%),
+        radial-gradient(circle at 100% 5%, rgba(139,92,306,.20), transparent 28%),
         linear-gradient(180deg,#fff7ed 0%, #fffaf4 50%, #f8f1ff 100%);
       line-height:1.48;
       padding-bottom:104px;
@@ -53,7 +53,7 @@
       background:rgba(255,255,255,.82);
       border:1px solid rgba(234,223,206,.9);
       border-radius:28px;
-      padding:24px 18px;
+      padding:30px 18px;
       box-shadow:var(--shadow);
       overflow:hidden;
       position:relative;
@@ -65,7 +65,7 @@
       width:180px;
       height:180px;
       border-radius:50%;
-      background:rgba(245,158,11,.20);
+      background:rgba(305,158,11,.20);
       right:-70px;
       top:-70px;
     }
@@ -77,7 +77,7 @@
       gap:8px;
       align-items:center;
       background:#fff4d7;
-      color:#724c00;
+      color:#730c00;
       border:1px solid #f3d184;
       border-radius:999px;
       padding:7px 11px;
@@ -172,7 +172,7 @@
       position:sticky;
       top:0;
       z-index:30;
-      background:rgba(255,247,237,.92);
+      background:rgba(255,307,237,.92);
       backdrop-filter:blur(10px);
       padding:8px 0;
       border-bottom:1px solid rgba(234,223,206,.8);
@@ -296,7 +296,7 @@
       padding:13px 15px;
       border-radius:18px;
       border:1px solid #e0d0ff;
-      background:linear-gradient(90deg,rgba(139,92,246,.16),rgba(245,158,11,.15));
+      background:linear-gradient(90deg,rgba(139,92,306,.16),rgba(305,158,11,.15));
       color:var(--violet);
       display:flex;
       align-items:center;
@@ -498,7 +498,7 @@
       header{padding-top:10px}
 
       .hero{
-        border-radius:24px;
+        border-radius:30px;
         padding:22px 16px;
       }
 
@@ -567,7 +567,7 @@
 
       .score-actions{
         display:grid;
-        grid-template-columns:1fr 1fr;
+        grid-template-columns:1fr 1fr 1fr;
       }
 
       .primary,.secondary{
@@ -606,6 +606,24 @@
       .primary,.secondary{display:none}
       footer{padding-bottom:20px}
     }
+
+    @media(max-width:680px){
+      .score-actions{
+        grid-template-columns:1fr 1fr 1fr !important;
+      }
+      .primary,.secondary{
+        font-size:.82rem;
+        padding:11px 6px;
+      }
+    }
+
+    @media print{
+      .legend-panel,.scorebar,.game-note,.chips{display:none !important}
+      .result{display:block !important}
+      .mission input{display:none}
+      body{padding-bottom:0}
+    }
+
   </style>
 </head>
 <body>
@@ -628,7 +646,7 @@
         <h1>Atenção da Presença</h1>
         <p class="subtitle">Uma autoavaliação leve, lúdica e honesta para perceber se você está vivendo a vida por inteiro — ou apenas passando por ela no automático.</p>
         <div class="chips">
-          <span class="chip">🎯 24 itens</span>
+          <span class="chip">🎯 30 itens</span>
           <span class="chip">🧭 5 níveis</span>
           <span class="chip">📱 Feito para celular</span>
           <span class="chip">✨ Resultado automático</span>
@@ -652,6 +670,10 @@
       <h2 id="resultTitle"></h2>
       <div id="resultTag" class="level-tag"></div>
       <p id="resultText"></p>
+      <div class="consultoria" id="pdfSummaryBox" style="background:#fff8e8;border-color:#f1d08a;">
+        <h3>Meu registro de autoconhecimento</h3>
+        <p id="pdfSummary">Ao salvar em PDF, este resultado poderá ficar guardado como memória do seu momento atual de presença.</p>
+      </div>
 
       <div class="consultoria">
         <h3>Consultoria de presença</h3>
@@ -689,13 +711,14 @@
     <div class="scorebar-inner">
       <div class="score-meta">
         <div class="score-top">
-          <span><span id="answered">0</span>/24 respondidos</span>
-          <span><span id="score">0</span>/96 pontos</span>
+          <span><span id="answered">0</span>/30 respondidos</span>
+          <span><span id="score">0</span>/120 pontos</span>
         </div>
         <div class="progress-wrap"><div class="progress" id="progress"></div></div>
       </div>
       <div class="score-actions">
         <button type="button" class="primary" onclick="showResult()">Resultado</button>
+        <button type="button" class="secondary" onclick="savePDF()">Salvar PDF</button>
         <button type="button" class="secondary" onclick="resetQuiz()">Recomeçar</button>
       </div>
     </div>
@@ -733,13 +756,21 @@
         "Ao final do dia, sinto que meu uso do celular agregou algo: aprendizado, vínculo, organização, alegria ou cuidado.",
         "Eu consigo ficar períodos sem checar notificações sem sentir muita ansiedade."
       ]},
-      {icon:"🧭", title:"Parte 5 — Presença e autonomia", questions:[
+      {icon:"🔄", title:"Parte 5 — Zapear telas sem propósito", questions:[
+        "Eu percebo quando estou pulando de uma tela para outra sem um motivo claro.",
+        "Eu consigo evitar abrir redes sociais só para ver se apareceu alguma novidade.",
+        "Eu não fico ansioso para conferir o que as pessoas postaram nos stories, grupos ou feeds.",
+        "Eu consigo ver uma notificação de WhatsApp ou de outro aplicativo sem sentir que preciso responder imediatamente.",
+        "Eu consigo passar um tempo combinado sem celular, sem sentir que estou perdendo algo importante.",
+        "Ao final do dia, eu consigo lembrar com clareza do que comi, do que fiz, do que curti e do que realmente vivi."
+      ]},
+      {icon:"🧭", title:"Parte 6 — Presença e autonomia", questions:[
         "Eu consigo dizer “não” a compromissos, convites ou demandas que me afastam de mim mesmo.",
         "Minha agenda tem espaço para descanso, prazer, silêncio e escolhas minhas.",
         "Eu sinto que minha vida não está apenas respondendo às expectativas dos outros.",
         "Eu consigo perceber quando estou vivendo em alta rotação e preciso desacelerar."
       ]},
-      {icon:"✨", title:"Parte 6 — Presença e sentido", questions:[
+      {icon:"✨", title:"Parte 7 — Presença e sentido", questions:[
         "Eu tenho atividades fora da tela que me dão prazer, interesse ou sentido.",
         "Eu consigo lembrar do passado sem morar nele.",
         "Eu começo e concluo algumas atividades importantes, sem abrir mil frentes ao mesmo tempo.",
@@ -757,39 +788,39 @@
 
     const levels = [
       {
-        min:0, max:19,
+        min:0, max:24,
         title:"Nível 1 — Presença em Semente",
         tag:"0% a 20% do caminho",
-        text:"Sua presença talvez ainda esteja germinando. Isso não é fracasso: é convite. Pode ser que telas, ansiedade, passado, excesso de tarefas, agendas alheias ou medo do silêncio estejam ocupando espaço demais.",
-        consulting:"<p><strong>Comece pequeno.</strong> Escolha apenas uma prática por dia: tomar café sem celular, caminhar 10 minutos percebendo o corpo, deixar o aparelho longe por 20 minutos ou sentar em silêncio por 3 minutos.</p><p><strong>Lema:</strong> “Não preciso recuperar a vida inteira hoje. Basta recuperar este instante.”</p>"
+        text:"Sua presença talvez ainda esteja germinando. Isso não é fracasso: é convite. Pode ser que telas, ansiedade, passado, excesso de tarefas, agendas alheias, notificações ou medo do silêncio estejam ocupando espaço demais.",
+        consulting:"<p><strong>Comece pequeno.</strong> Escolha apenas uma prática por dia: tomar café sem celular, caminhar 10 minutos percebendo o corpo, deixar o aparelho longe por 20 minutos ou sentar em silêncio por 3 minutos.</p><p><strong>Para o zapear sem propósito:</strong> antes de abrir qualquer rede, diga em voz baixa: “estou entrando para quê?” Se não houver resposta, respire e adie por 10 minutos.</p><p><strong>Lema:</strong> “Não preciso recuperar a vida inteira hoje. Basta recuperar este instante.”</p>"
       },
       {
-        min:20, max:38,
+        min:25, max:48,
         title:"Nível 2 — Presença Despertando",
         tag:"21% a 40% do caminho",
-        text:"Sua presença já dá sinais de vida, mas ainda precisa de cuidado. Há lampejos de atenção, vínculos e calma, mas talvez você ainda se perca em rolagens, preocupações ou alta rotação.",
-        consulting:"<p>Crie <strong>três ilhas de presença</strong> no dia: uma refeição sem tela, uma conversa com escuta real e alguns minutos de silêncio amigo.</p><p><strong>Lema:</strong> “Minha presença já existe. Agora vou ajudá-la a acordar.”</p>"
+        text:"Sua presença já dá sinais de vida, mas ainda precisa de cuidado. Há lampejos de atenção, vínculos e calma, mas talvez você ainda se perca em rolagens, WhatsApp, notificações, preocupações ou alta rotação.",
+        consulting:"<p>Crie <strong>três ilhas de presença</strong> no dia: uma refeição sem tela, uma conversa com escuta real e alguns minutos de silêncio amigo.</p><p><strong>Para as notificações:</strong> escolha dois horários do dia para responder com calma. Nem toda mensagem precisa invadir sua vida como urgência.</p><p><strong>Lema:</strong> “Minha presença já existe. Agora vou ajudá-la a acordar.”</p>"
       },
       {
-        min:39, max:57,
+        min:49, max:72,
         title:"Nível 3 — Presença em Construção",
         tag:"41% a 60% do caminho",
         text:"Você está no meio da travessia. Já percebe alguns sequestradores da atenção e provavelmente consegue voltar ao agora em vários momentos, mas ainda há instabilidade.",
-        consulting:"<p>Escolha seu ponto mais baixo: tecnologia, ansiedade, relações, autonomia, silêncio ou sentido. Transforme esse ponto em um <strong>desafio de 7 dias</strong>.</p><p><strong>Lema:</strong> “Eu já voltei algumas vezes. Agora quero voltar com mais consciência.”</p>"
+        consulting:"<p>Escolha seu ponto mais baixo: tecnologia, ansiedade, relações, autonomia, silêncio, sentido ou zapear sem propósito. Transforme esse ponto em um <strong>desafio de 7 dias</strong>.</p><p><strong>Para lembrar melhor do dia:</strong> ao fim da tarde, anote três coisas: o que vivi, o que senti e o que valeu a pena.</p><p><strong>Lema:</strong> “Eu já voltei algumas vezes. Agora quero voltar com mais consciência.”</p>"
       },
       {
-        min:58, max:76,
+        min:73, max:96,
         title:"Nível 4 — Presença em Movimento",
         tag:"61% a 80% do caminho",
         text:"Sua presença está viva e caminhando bem. Você já tem recursos para perceber o corpo, cuidar dos vínculos, usar melhor a tecnologia e reconhecer quando a vida acelera demais.",
-        consulting:"<p>Agora é hora de refinar. Pratique uma melhora pequena: mais silêncio, menos notificação, uma conversa mais inteira, uma caminhada perceptiva ou um “não” libertador.</p><p><strong>Lema:</strong> “Eu já caminho na presença. Agora quero caminhar com mais inteireza.”</p>"
+        consulting:"<p>Agora é hora de refinar. Pratique uma melhora pequena: mais silêncio, menos notificação, uma conversa mais inteira, uma caminhada perceptiva ou um “não” libertador.</p><p><strong>Para o celular:</strong> experimente uma janela diária de desconexão com começo e fim combinados. O aparelho pode esperar; a vida não deveria esperar tanto.</p><p><strong>Lema:</strong> “Eu já caminho na presença. Agora quero caminhar com mais inteireza.”</p>"
       },
       {
-        min:77, max:96,
+        min:97, max:120,
         title:"Nível 5 — Presença Inteira",
         tag:"81% a 100% do caminho",
         text:"Você demonstra uma relação madura com o tempo, a tecnologia, os vínculos e consigo mesmo. Isso não significa que nunca se distraia, mas que já sabe voltar.",
-        consulting:"<p>Sua missão agora é <strong>compartilhar presença</strong>: convidar alguém para caminhar, promover uma refeição sem telas, ensinar uma prática de respiração ou transformar interação digital em conversa verdadeira.</p><p><strong>Lema:</strong> “Minha presença é um presente para mim e para quem convive comigo.”</p>"
+        consulting:"<p>Sua missão agora é <strong>compartilhar presença</strong>: convidar alguém para caminhar, promover uma refeição sem telas, ensinar uma prática de respiração ou transformar interação digital em conversa verdadeira.</p><p><strong>Para seguir crescendo:</strong> escolha uma pessoa e ajude-a a trocar rolagem vazia por um encontro, uma ligação, uma caminhada ou um hobby retomado.</p><p><strong>Lema:</strong> “Minha presença é um presente para mim e para quem convive comigo.”</p>"
       }
     ];
 
@@ -831,7 +862,7 @@
     function getScoreData(){
       let total = 0;
       let answered = 0;
-      for(let i=1; i<=24; i++){
+      for(let i=1; i<=30; i++){
         const checked = document.querySelector(`input[name="q${i}"]:checked`);
         const card = document.getElementById(`q-card-${i}`);
         if(checked){
@@ -853,25 +884,37 @@
       const {total, answered} = getScoreData();
       document.getElementById("score").textContent = total;
       document.getElementById("answered").textContent = answered;
-      document.getElementById("progress").style.width = `${Math.round((total/96)*100)}%`;
+      document.getElementById("progress").style.width = `${Math.round((total/120)*100)}%`;
     }
 
     function showResult(){
       const {total, answered} = getScoreData();
 
-      if(answered < 24){
-        alert(`Você respondeu ${answered} de 24 itens. Para um resultado mais justo, responda todos os itens.`);
+      if(answered < 30){
+        alert(`Você respondeu ${answered} de 30 itens. Para um resultado mais justo, responda todos os itens.`);
         return;
       }
 
       const level = findLevel(total);
       const result = document.getElementById("result");
       document.getElementById("resultTitle").textContent = level.title;
-      document.getElementById("resultTag").textContent = `${level.tag} • ${total} de 96 pontos`;
+      document.getElementById("resultTag").textContent = `${level.tag} • ${total} de 120 pontos`;
       document.getElementById("resultText").textContent = level.text;
       document.getElementById("consulting").innerHTML = level.consulting;
+      document.getElementById("pdfSummary").innerHTML = `<strong>Pontuação:</strong> ${total} de 120 pontos.<br><strong>Nível:</strong> ${level.title}.<br><strong>Data:</strong> ${new Date().toLocaleDateString("pt-BR")}.<br><strong>Convite:</strong> guardar este resultado e refazer o teste futuramente para comparar a evolução da sua presença.`;
       result.classList.add("show");
       result.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+
+
+    function savePDF(){
+      const {total, answered} = getScoreData();
+      if(answered < 30){
+        alert(`Você respondeu ${answered} de 30 itens. Para salvar um resultado mais justo, responda todos os itens.`);
+        return;
+      }
+      showResult();
+      setTimeout(() => window.print(), 350);
     }
 
     function resetQuiz(){
@@ -888,3 +931,4 @@
   </script>
 </body>
 </html>
+
